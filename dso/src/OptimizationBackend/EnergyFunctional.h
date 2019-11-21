@@ -24,139 +24,151 @@
 
 #pragma once
 
- 
 #include "util/NumType.h"
 #include "util/IndexThreadReduce.h"
 #include "vector"
 #include <math.h>
 #include "map"
 
+namespace dso {
 
-namespace dso
-{
+    class PointFrameResidual;
 
-class PointFrameResidual;
-class CalibHessian;
-class FrameHessian;
-class PointHessian;
+    class CalibHessian;
 
+    class FrameHessian;
 
-class EFResidual;
-class EFPoint;
-class EFFrame;
-class EnergyFunctional;
-class AccumulatedTopHessian;
-class AccumulatedTopHessianSSE;
-class AccumulatedSCHessian;
-class AccumulatedSCHessianSSE;
+    class PointHessian;
 
+    class EFResidual;
 
-extern bool EFAdjointsValid;
-extern bool EFIndicesValid;
-extern bool EFDeltaValid;
+    class EFPoint;
 
+    class EFFrame;
 
+    class EnergyFunctional;
 
-class EnergyFunctional {
-public:
-	EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
-	friend class EFFrame;
-	friend class EFPoint;
-	friend class EFResidual;
-	friend class AccumulatedTopHessian;
-	friend class AccumulatedTopHessianSSE;
-	friend class AccumulatedSCHessian;
-	friend class AccumulatedSCHessianSSE;
+    class AccumulatedTopHessian;
 
-	EnergyFunctional();
-	~EnergyFunctional();
+    class AccumulatedTopHessianSSE;
 
+    class AccumulatedSCHessian;
 
-	EFResidual* insertResidual(PointFrameResidual* r);
-	EFFrame* insertFrame(FrameHessian* fh, CalibHessian* Hcalib);
-	EFPoint* insertPoint(PointHessian* ph);
+    class AccumulatedSCHessianSSE;
 
-	void dropResidual(EFResidual* r);
-	void marginalizeFrame(EFFrame* fh);
-	void removePoint(EFPoint* ph);
+    extern bool EFAdjointsValid;
+    extern bool EFIndicesValid;
+    extern bool EFDeltaValid;
 
+    class EnergyFunctional {
+    public:
+        EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
+        friend class EFFrame;
 
-	void marginalizePointsF();
-	void dropPointsF();
-	void solveSystemF(int iteration, double lambda, CalibHessian* HCalib);
-	double calcMEnergyF();
-	double calcLEnergyF_MT();
+        friend class EFPoint;
 
+        friend class EFResidual;
 
-	void makeIDX();
+        friend class AccumulatedTopHessian;
 
-	void setDeltaF(CalibHessian* HCalib);
+        friend class AccumulatedTopHessianSSE;
 
-	void setAdjointsF(CalibHessian* Hcalib);
+        friend class AccumulatedSCHessian;
 
-	std::vector<EFFrame*> frames;
-	int nPoints, nFrames, nResiduals;
+        friend class AccumulatedSCHessianSSE;
 
-	MatXX HM;
-	VecX bM;
+        EnergyFunctional();
 
-	int resInA, resInL, resInM;
-	MatXX lastHS;
-	VecX lastbS;
-	VecX lastX;
-	std::vector<VecX> lastNullspaces_forLogging;
-	std::vector<VecX> lastNullspaces_pose;
-	std::vector<VecX> lastNullspaces_scale;
-	std::vector<VecX> lastNullspaces_affA;
-	std::vector<VecX> lastNullspaces_affB;
+        ~EnergyFunctional();
 
-	IndexThreadReduce<Vec10>* red;
+        EFResidual *insertResidual(PointFrameResidual *r);
 
+        EFFrame *insertFrame(FrameHessian *fh, CalibHessian *Hcalib);
 
-	std::map<uint64_t,
-	  Eigen::Vector2i,
-	  std::less<uint64_t>,
-	  Eigen::aligned_allocator<std::pair<const uint64_t, Eigen::Vector2i>>
-	  > connectivityMap;
+        EFPoint *insertPoint(PointHessian *ph);
 
-private:
+        void dropResidual(EFResidual *r);
 
-	VecX getStitchedDeltaF() const;
+        void marginalizeFrame(EFFrame *fh);
 
-	void resubstituteF_MT(VecX x, CalibHessian* HCalib, bool MT);
-    void resubstituteFPt(const VecCf &xc, Mat18f* xAd, int min, int max, Vec10* stats, int tid);
+        void removePoint(EFPoint *ph);
 
-	void accumulateAF_MT(MatXX &H, VecX &b, bool MT);
-	void accumulateLF_MT(MatXX &H, VecX &b, bool MT);
-	void accumulateSCF_MT(MatXX &H, VecX &b, bool MT);
+        void marginalizePointsF();
 
-	void calcLEnergyPt(int min, int max, Vec10* stats, int tid);
+        void dropPointsF();
 
-	void orthogonalize(VecX* b, MatXX* H);
-	Mat18f* adHTdeltaF;
+        void solveSystemF(int iteration, double lambda, CalibHessian *HCalib);
 
-	Mat88* adHost;
-	Mat88* adTarget;
+        double calcMEnergyF();
 
-	Mat88f* adHostF;
-	Mat88f* adTargetF;
+        double calcLEnergyF_MT();
 
+        void makeIDX();
 
-	VecC cPrior;
-	VecCf cDeltaF;
-	VecCf cPriorF;
+        void setDeltaF(CalibHessian *HCalib);
 
-	AccumulatedTopHessianSSE* accSSE_top_L;
-	AccumulatedTopHessianSSE* accSSE_top_A;
+        void setAdjointsF(CalibHessian *Hcalib);
 
+        std::vector<EFFrame *> frames;
+        int nPoints, nFrames, nResiduals;
 
-	AccumulatedSCHessianSSE* accSSE_bot;
+        MatXX HM;
+        VecX bM;
 
-	std::vector<EFPoint*> allPoints;
-	std::vector<EFPoint*> allPointsToMarg;
+        int resInA, resInL, resInM;
+        MatXX lastHS;
+        VecX lastbS;
+        VecX lastX;
+        std::vector<VecX> lastNullspaces_forLogging;
+        std::vector<VecX> lastNullspaces_pose;
+        std::vector<VecX> lastNullspaces_scale;
+        std::vector<VecX> lastNullspaces_affA;
+        std::vector<VecX> lastNullspaces_affB;
 
-	float currentLambda;
-};
+        IndexThreadReduce<Vec10> *red;
+
+        std::map<uint64_t, Eigen::Vector2i, std::less<uint64_t>,
+                Eigen::aligned_allocator<std::pair<const uint64_t, Eigen::Vector2i>>> connectivityMap;
+
+    private:
+        VecX getStitchedDeltaF() const;
+
+        void resubstituteF_MT(VecX x, CalibHessian *HCalib, bool MT);
+
+        void resubstituteFPt(const VecCf &xc, Mat18f *xAd, int min, int max, Vec10 *stats, int tid);
+
+        void accumulateAF_MT(MatXX &H, VecX &b, bool MT);
+
+        void accumulateLF_MT(MatXX &H, VecX &b, bool MT);
+
+        void accumulateSCF_MT(MatXX &H, VecX &b, bool MT);
+
+        void calcLEnergyPt(int min, int max, Vec10 *stats, int tid);
+
+        void orthogonalize(VecX *b, MatXX *H);
+
+        Mat18f *adHTdeltaF;
+
+        Mat88 *adHost;
+        Mat88 *adTarget;
+
+        Mat88f *adHostF;
+        Mat88f *adTargetF;
+
+        VecC cPrior;
+        VecCf cDeltaF;
+        VecCf cPriorF;
+
+        AccumulatedTopHessianSSE *accSSE_top_L;
+        AccumulatedTopHessianSSE *accSSE_top_A;
+
+        AccumulatedSCHessianSSE *accSSE_bot;
+
+        std::vector<EFPoint *> allPoints;
+        std::vector<EFPoint *> allPointsToMarg;
+
+        float currentLambda;
+    };
 }
 

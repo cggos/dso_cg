@@ -26,47 +26,43 @@
  
 #include "util/NumType.h"
 
-namespace dso
-{
+namespace dso {
 
-enum PixelSelectorStatus {PIXSEL_VOID=0, PIXSEL_1, PIXSEL_2, PIXSEL_3};
+    enum PixelSelectorStatus {
+        PIXSEL_VOID = 0, PIXSEL_1, PIXSEL_2, PIXSEL_3
+    };
 
+    class FrameHessian;
 
-class FrameHessian;
+    class PixelSelector {
+    public:
+        EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
-class PixelSelector
-{
-public:
-	EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
-	int makeMaps(
-			const FrameHessian* const fh,
-			float* map_out, float density, int recursionsLeft=1, bool plot=false, float thFactor=1);
+        int makeMaps(
+                const FrameHessian *const fh,
+                float *map_out, float density, int recursionsLeft = 1, bool plot = false, float thFactor = 1);
 
-	PixelSelector(int w, int h);
-	~PixelSelector();
-	int currentPotential;
+        PixelSelector(int w, int h);
 
+        ~PixelSelector();
 
-	bool allowFast;
-	void makeHists(const FrameHessian* const fh);
-private:
+        int currentPotential;
 
-	Eigen::Vector3i select(const FrameHessian* const fh,
-			float* map_out, int pot, float thFactor=1);
+        bool allowFast;
 
+        void makeHists(const FrameHessian *const fh);
 
-	unsigned char* randomPattern;
+    private:
 
+        Eigen::Vector3i select(const FrameHessian *const fh, float *map_out, int pot, float thFactor = 1);
 
-	int* gradHist;
-	float* ths;
-	float* thsSmoothed;
-	int thsStep;
-	const FrameHessian* gradHistFrame;
-};
+        unsigned char *randomPattern;
 
-
-
-
+        int *gradHist;
+        float *ths;
+        float *thsSmoothed;
+        int thsStep;
+        const FrameHessian *gradHistFrame;
+    };
 }
 

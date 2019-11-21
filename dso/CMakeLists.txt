@@ -4,7 +4,6 @@ PROJECT(${PROJECT_NAME})
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
-
 set(BUILD_TYPE Release)
 #set(BUILD_TYPE RelWithDebInfo)
 
@@ -31,9 +30,9 @@ set(CMAKE_CXX_FLAGS
 #   "${SSE_FLAGS} -O3 -g -std=c++0x -fno-omit-frame-pointer"
 )
 
-if (MSVC)
-     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
-endif (MSVC)
+if(MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+endif(MSVC)
 
 # Sources files
 set(dso_SOURCE_FILES
@@ -57,14 +56,11 @@ set(dso_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/src/util/globalCalib.cpp
 )
 
-
-
 include_directories(
   ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_SOURCE_DIR}/sse2neon
   ${EIGEN3_INCLUDE_DIR}
 ) 
-
 
 # decide if we have pangolin
 if (Pangolin_FOUND)
@@ -89,17 +85,17 @@ if (OpenCV_FOUND)
 	  ${PROJECT_SOURCE_DIR}/src/IOWrapper/OpenCV/ImageDisplay_OpenCV.cpp
 	  ${PROJECT_SOURCE_DIR}/src/IOWrapper/OpenCV/ImageRW_OpenCV.cpp)
 	set(HAS_OPENCV 1)
-else ()
+else()
 	message("--- could not find OpenCV, not compiling dso_opencv library.")
 	message("    this means there will be no image display, and image read / load functionality.")
 	set(dso_opencv_SOURCE_FILES 
 	  ${PROJECT_SOURCE_DIR}/src/IOWrapper/ImageDisplay_dummy.cpp
 	  ${PROJECT_SOURCE_DIR}/src/IOWrapper/ImageRW_dummy.cpp)
 	set(HAS_OPENCV 0)
-endif ()
+endif()
 
 # decide if we have ziplib.
-if (LIBZIP_LIBRARY)
+if(LIBZIP_LIBRARY)
 	message("--- found ziplib (${LIBZIP_VERSION}), compiling with zip capability.")
 	add_definitions(-DHAS_ZIPLIB=1)
 	include_directories( ${LIBZIP_INCLUDE_DIR_ZIP} ${LIBZIP_INCLUDE_DIR_ZIPCONF} ) 
@@ -108,13 +104,11 @@ else()
 	set(LIBZIP_LIBRARY "")
 endif()
 
-
 # compile main library.
-include_directories( ${CSPARSE_INCLUDE_DIR} ${CHOLMOD_INCLUDE_DIR}) 
+include_directories(${CSPARSE_INCLUDE_DIR} ${CHOLMOD_INCLUDE_DIR})
 add_library(dso ${dso_SOURCE_FILES} ${dso_opencv_SOURCE_FILES} ${dso_pangolin_SOURCE_FILES})
 
-#set_property( TARGET dso APPEND_STRING PROPERTY COMPILE_FLAGS -Wall )
-
+#set_property(TARGET dso APPEND_STRING PROPERTY COMPILE_FLAGS -Wall)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin") # OSX
     set(BOOST_THREAD_LIBRARY boost_thread-mt)
@@ -130,4 +124,3 @@ if (OpenCV_FOUND AND Pangolin_FOUND)
 else()
 	message("--- not building dso_dataset, since either don't have openCV or Pangolin.")
 endif()
-
