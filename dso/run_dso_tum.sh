@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-monovo_seq=/dev_sdb/datasets/TUM/MonoVODataset/sequence_11
+monovo_seq=/media/cg/udisk_cg/slam_datasets/TUM/MonoVO/sequence_11
 
 echo $monovo_seq
 

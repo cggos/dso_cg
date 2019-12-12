@@ -1,6 +1,6 @@
 # DSO
 
-Modified version of **DSO** (commit ae1d0b3 on Dec 5, 2018), **Direct Sparse Odometry**, For more information see [https://vision.in.tum.de/dso](https://vision.in.tum.de/dso).
+Modified version of **[DSO](https://github.com/JakobEngel/dso)** (commit ae1d0b3 on Dec 5, 2018), **Direct Sparse Odometry**, For more information see [https://vision.in.tum.de/dso](https://vision.in.tum.de/dso).
 
 
 ## Related Papers
@@ -23,19 +23,24 @@ Modified version of **DSO** (commit ae1d0b3 on Dec 5, 2018), **Direct Sparse Odo
 
 * [Pangolin](https://github.com/stevenlovegrove/Pangolin) (highly recommended), Used for 3D visualization & the GUI.
 
-* ziplib (recommended), used to read datasets with images as .zip, as e.g. in the TUM monoVO dataset.
+* thirdparty
   ```sh
-	sudo apt-get install zlib1g-dev
-	cd dso/thirdparty
-	tar -zxvf libzip-1.1.1.tar.gz
-	cd libzip-1.1.1/
-	./configure
-	make
-	sudo make install
-	sudo cp lib/zipconf.h /usr/local/include/zipconf.h #(no idea why that is needed).
-	```
+  svn checkout https://github.com/JakobEngel/dso/trunk/thirdparty
+  ```
+  * Sophus
+  * ziplib (recommended), used to read datasets with images as .zip, as e.g. in the TUM monoVO dataset.
+    ```sh
+  	sudo apt-get install zlib1g-dev
+  	cd dso/thirdparty
+  	tar -zxvf libzip-1.1.1.tar.gz
+  	cd libzip-1.1.1/
+  	./configure
+  	make
+  	sudo make install
+  	sudo cp lib/zipconf.h /usr/local/include/zipconf.h #(no idea why that is needed).
+  	```
 
-* [sse2neon](https://github.com/jratcliff63367/sse2neon.git) (required for ARM builds).
+  * [sse2neon](https://github.com/jratcliff63367/sse2neon.git) (required for ARM builds).
 
 
 ## Build
@@ -51,11 +56,19 @@ cmake .. & make -j4
 * Run on a dataset from [TUM mono-dataset](https://vision.in.tum.de/mono-dataset)
   ```sh
 	cd build
-	../run_dso.sh
+	../run_dso_tum.sh
 	```
-
 	<div align=center>
 	  <img src="./images/dso_monovo.jpg">
+  </div>
+
+* Run on a dataset MH_01_easy  
+  ```sh
+  cd build
+  ../run_dso_euroc.sh
+  ```
+  <div align=center>
+	  <img src="./images/dso_euroc.jpg">
   </div>
 
 ## Dataset Format
