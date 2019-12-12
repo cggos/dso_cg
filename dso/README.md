@@ -1,6 +1,6 @@
 # DSO
 
-Modified version of **[DSO](https://github.com/JakobEngel/dso)** (commit ae1d0b3 on Dec 5, 2018), **Direct Sparse Odometry**, For more information see [https://vision.in.tum.de/dso](https://vision.in.tum.de/dso).
+Modified version of **[DSO](https://github.com/JakobEngel/dso)** (commit ae1d0b3 on Dec 5, 2018), **Direct Sparse Odometry**.
 
 
 ## Related Papers
